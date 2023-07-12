@@ -40,7 +40,7 @@
 
           <div class="mt-2">
             <p class="text-xl font-bold">{{ i.fullname }}</p>
-           <p>Total Votes: {{ CheckVote(i).vote.filter((v)=> v.contestId == i.id).length }}</p>
+           <p>Total Votes: {{ allVotes.filter((v)=> v.contestId == i.id).length }}</p>
             <q-btn
               :disable="CheckVote(i).voted"
               :loading="loading"
