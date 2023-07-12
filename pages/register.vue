@@ -75,7 +75,7 @@
     </div>
     <section v-else class="bg-white dark:bg-gray-900">
       <div
-        class="container flex items-center justify-center min-h-screen px-6 mx-auto"
+        class=" flex items-center justify-center min-h-screen px-6 mx-auto"
       >
         <form class="w-full max-w-md">
           <div class="flex justify-center mx-auto">
@@ -234,11 +234,7 @@ let authfunc;
 let nuxt;
 let store;
 export default {
-  setup() {
-    definePageMeta({
-      layout: 'home',
-    });
-  },
+ 
   data: () => ({
     phone: '',
     email: '',
