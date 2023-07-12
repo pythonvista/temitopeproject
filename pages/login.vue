@@ -72,7 +72,7 @@
         </div>
       </div>
     </div>
-  <div v-else class="flex justify-center items-center min-h-screen">
+  <div v-else class="flex p-5 justify-center items-center min-h-screen">
     <div
       class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md"
     >
