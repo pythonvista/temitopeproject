@@ -27,6 +27,7 @@ export default {
     onAuthStateChanged(auth.UserState(), async (user) => {
       if (user) {
         store.SetActiveUser(user.phoneNumber, true);
+        console.log(user.phoneNumber)
         const doc = await crud.getSingleDoc('USERS', user.phoneNumber);
         store.SetUserData(doc.data());
       } else {

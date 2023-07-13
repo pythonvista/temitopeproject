@@ -1,77 +1,74 @@
 <template>
-   <div class="otpbox boxs" v-if="otpbox">
+  <div class="otpbox boxs" v-if="otpbox">
+    <div x-data="{ isOpen: true }" class="relative w-full flex justify-center">
       <div
-        x-data="{ isOpen: true }"
-        class="relative w-full flex justify-center"
+        class="flex items-end justify-center w-full px-4 pt-4 pb-20 text-center sm:block sm:p-0"
       >
-        <div
-          class="flex items-end justify-center w-full px-4 pt-4 pb-20 text-center sm:block sm:p-0"
+        <span
+          class="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+          >&#8203;</span
         >
-          <span
-            class="hidden sm:inline-block sm:align-middle sm:h-screen"
-            aria-hidden="true"
-            >&#8203;</span
-          >
 
-          <div
-            class="relative inline-block px-6 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6"
-          >
-            <div>
-              <div class="flex items-center justify-center">
-                <img
-                  class="object-cover w-12 h-12 rounded-full ring ring-white"
-                  src="https://i.imgur.com/pdoGQHQ.jpg"
-                  alt=""
-                />
-                <img
-                  class="object-cover w-12 h-12 -mx-4 rounded-full ring ring-white"
-                  src="https://i.imgur.com/iu8sp8N.jpg"
-                  alt=""
-                />
-                <img
-                  class="object-cover w-12 h-12 rounded-full ring ring-white"
-                  src="https://i.imgur.com/e2p5spL.jpg"
-                  alt=""
-                />
-              </div>
+        <div
+          class="relative inline-block px-6 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:align-middle sm:max-w-md sm:w-full sm:p-6"
+        >
+          <div>
+            <div class="flex items-center justify-center">
+              <img
+                class="object-cover w-12 h-12 rounded-full ring ring-white"
+                src="https://i.imgur.com/pdoGQHQ.jpg"
+                alt=""
+              />
+              <img
+                class="object-cover w-12 h-12 -mx-4 rounded-full ring ring-white"
+                src="https://i.imgur.com/iu8sp8N.jpg"
+                alt=""
+              />
+              <img
+                class="object-cover w-12 h-12 rounded-full ring ring-white"
+                src="https://i.imgur.com/e2p5spL.jpg"
+                alt=""
+              />
             </div>
+          </div>
 
-            <div class="mt-4">
-              <p class="text-center text-lg text-black" for="share link">
-                Sms Code Sent
-              </p>
-
-              <div class="flex items-center mt-2 -mx-1">
-                <input
-                  type="text"
-                  placeholder="Enter otp"
-                  v-model="otp"
-                  class="flex-1 block text-center h-10 px-4 mx-1 text-sm text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-                />
-              </div>
-            </div>
-            <p
-              class="text-md font-bold underline py-1 text-center text-green-400"
-            >
-              Resend Otp
+          <div class="mt-4">
+            <p class="text-center text-lg text-black" for="share link">
+              Sms Code Sent
             </p>
-            <div
-              class="mt-4 sm:mt-6 sm:flex justify-center sm:items-center sm:-mx-2"
-            >
-              <q-btn
-                id="mapps"
-                :loading="loading2"
-                :disable="!otp"
-                @click="VerifyOtp"
-                class="w-full px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-              >
-                Verify
-              </q-btn>
+
+            <div class="flex items-center mt-2 -mx-1">
+              <input
+                type="text"
+                placeholder="Enter otp"
+                v-model="otp"
+                class="flex-1 block text-center h-10 px-4 mx-1 text-sm text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+              />
             </div>
+          </div>
+          <p
+            class="text-md font-bold underline py-1 text-center text-green-400"
+          >
+            Resend Otp
+          </p>
+          <div
+            class="mt-4 sm:mt-6 sm:flex justify-center sm:items-center sm:-mx-2"
+          >
+            <q-btn
+              id="mapps"
+              :loading="loading2"
+              :disable="!otp"
+              @click="VerifyOtp"
+              class="w-full px-4 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
+            >
+              Verify
+            </q-btn>
           </div>
         </div>
       </div>
     </div>
+  </div>
   <div v-else class="flex p-5 justify-center items-center min-h-screen">
     <div
       class="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md"
@@ -80,7 +77,7 @@
         <div class="flex justify-center mx-auto">
           <img
             class="w-auto h-7 sm:h-8"
-            src="https://merakiui.com/images/logo.svg"
+            src="@/assets/images/logo/fuoye-logo.png"
             alt=""
           />
         </div>
@@ -102,10 +99,7 @@
             />
           </div>
 
-    
-
           <div class="flex items-center justify-between mt-4">
-          
             <q-btn
               :disable="!phone"
               @click="SendOtp"
@@ -127,7 +121,7 @@
         </span>
 
         <a
-          @click="$router.push({path: '/register'})"
+          @click="$router.push({ path: '/register' })"
           class="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
           >Register</a
         >

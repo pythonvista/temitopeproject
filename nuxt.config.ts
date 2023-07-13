@@ -27,6 +27,18 @@ export default defineNuxtConfig({
           integrity: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
           crossorigin: '',
         },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css',
+        },
       ],
       script: [
         {
@@ -38,6 +50,18 @@ export default defineNuxtConfig({
         },
         {
           src: 'https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js',
+          type: 'text/javascript',
+          crossorigin: '',
+          async: true,
+        },
+        {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js',
+          type: 'text/javascript',
+          crossorigin: '',
+          async: true,
+        },
+        {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js',
           type: 'text/javascript',
           crossorigin: '',
           async: true,

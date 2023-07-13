@@ -40,14 +40,8 @@
 
           <div class="mt-2">
             <p class="text-xl font-bold">{{ i.fullname }}</p>
-           <p>Total Votes: {{ allVotes.filter((v)=> v.contestId == i.id).length }}</p>
-            <q-btn
-              :disable="CheckVote(i).voted"
-              :loading="loading"
-              @click="Vote(i)"
-              color="blue"
-              >{{ ReturnContestId(CheckVote(i).vote, i.id) ? `Voted ${i.fullname}✅` : 'vote'  }}</q-btn
-            >
+           <p v-if="allVotes">Total Votes: {{ allVotes.filter((v)=> v.contestId == i.id).length }}</p>
+            
           </div>
         </a>
       </swiper-slide>
@@ -92,42 +86,6 @@ export default {
         ShowSnack('Error getting ads', 'negative');
       }
     },
-    async Vote(data) {
-      try {
-        this.loading = true;
-        if (this.Scanned) {
-          await crud.addDocWithoutId('VOTES', {
-            pollid: data.pollsid,
-            contestId: data.id,
-            uid: this.activeUser,
-          });
-          store.SetScan(false)
-          this.loading = false;
-        } else {
-          this.loading = false;
-          ShowSnack('Facial Validation Required', 'negative');
-          this.$router.push({ path: '/scanimg' });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    CheckVote(data) {
-        let votes = this.allVotes.filter((v) => v.pollid == data.pollsid && v.uid == this.activeUser);
-      if (votes.length > 0) {
-        return { voted: true, vote: votes  };
-      } else {
-        return { voted: false, vote: votes };
-      }
-    },
-    ReturnContestId(data, id) {
-      let contest = data.find((v) => v.contestId == id) || {}
-      let cid = contest.contestId
-      if (cid) {
-        return true
-      }
-      return false
-    }
   },
   setup() {
     return {

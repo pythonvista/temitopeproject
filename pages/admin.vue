@@ -1,5 +1,25 @@
 <template>
-  <div class="p-4">
+  <div
+    v-if="!logged"
+    class="flex min-h-screen gap-3 bg-slate-500 justify-center items-center flex-col"
+  >
+    <input
+      v-model="username"
+      class="bg-white px-3 py-2 rounded"
+      type="text"
+      placeholder="Admin Username"
+    />
+    <input
+      v-model="pass"
+      type="password"
+      name=""
+      id=""
+      class="bg-white px-3 py-2 rounded"
+      placeholder="Password"
+    />
+    <q-btn @click="Login" color="blue">Login</q-btn>
+  </div>
+  <div v-else class="p-4">
     <q-btn @click="OpenElection">Add Election</q-btn>
     <q-btn @click="OpenPools">Add Polls</q-btn>
     <q-btn @click="OpenCont">Add Contestant</q-btn>
@@ -42,7 +62,7 @@
         <p>Pools Id: {{ polls.id }}</p>
         <q-select
           label="Select Election"
-          :options="allElection.map((m)=> m.id)"
+          :options="allElection.map((m) => m.id)"
           class="w-full"
           v-model="polls.electionid"
         ></q-select>
@@ -74,11 +94,11 @@
         <p>Contes Id: {{ contestant.id }}</p>
         <q-select
           label="Select Pools"
-          :options="allPools.map((m)=> m.id)"
+          :options="allPools.map((m) => m.id)"
           class="w-full"
           v-model="contestant.pollsid"
         ></q-select>
-       
+
         <input
           type="text"
           v-model="contestant.fullname"
@@ -110,7 +130,7 @@
 
       <div class="border-2 border-solid border-red-500">
         <p>All Polls</p>
-       
+
         <h1 v-for="(i, index) in allPools" :key="index">{{ i.title }}</h1>
       </div>
 
@@ -121,6 +141,14 @@
         </h1>
       </div>
     </div>
+    <div class="px-3 my-4" v-for="(i, index) in allPools" :key="index">
+      <p class="text-2xl font-bold w-full text-center">
+        {{ i.title }} Contestants
+      </p>
+       <utils-adminslide  :allVotes="allVotes"
+        :data="allContestant.filter((v) => v.pollsid == i.id)"></utils-adminslide>
+    </div>
+   
   </div>
 </template>
 
@@ -131,6 +159,10 @@ let crud;
 let store;
 export default {
   data: () => ({
+    logged: false,
+    username: '',
+    allVotes: [],
+    pass: '',
     allElection: [],
     allPools: [],
     allContestant: [],
@@ -144,25 +176,28 @@ export default {
   }),
   methods: {
     GetAll() {
-          onSnapshot(crud.queryDoc('ELECTIONS'), (snapshot) => {
+      onSnapshot(crud.queryDoc('ELECTIONS'), (snapshot) => {
         this.allElection = [];
         snapshot.forEach((doc) => {
-          
           this.allElection.push(doc.data());
         });
       });
-          onSnapshot(crud.queryDoc('POLLS'), (snapshot) => {
-         this.allPools = [];
+      onSnapshot(crud.queryDoc('POLLS'), (snapshot) => {
+        this.allPools = [];
         snapshot.forEach((doc) => {
-         
           this.allPools.push(doc.data());
         });
       });
-          onSnapshot(crud.queryDoc('Conts'), (snapshot) => {
-           this.allContestant = [];
+      onSnapshot(crud.queryDoc('Conts'), (snapshot) => {
+        this.allContestant = [];
         snapshot.forEach((doc) => {
-       
           this.allContestant.push(doc.data());
+        });
+      });
+      onSnapshot(crud.queryDoc('VOTES'), (snapshot) => {
+        this.allVotes = [];
+        snapshot.forEach((doc) => {
+          this.allVotes.push(doc.data());
         });
       });
     },
@@ -217,15 +252,22 @@ export default {
         'Cont' + Math.floor(Math.random() * 1122980808 + 222).toString();
       this.cont = true;
     },
+    Login() {
+      if (this.username == 'admin123' && this.pass == '123456') {
+        ShowSnack('Admin Logged In Successfully', 'positive');
+        this.logged = true;
+      } else {
+        ShowSnack('Inccorect Password Access Denied', 'negative');
+      }
+    },
   },
   created() {
     nuxt = useNuxtApp();
     crud = nuxt.$crud;
- 
-    },
-    mounted() {
-       this.GetAll();
-  }
+  },
+  mounted() {
+    this.GetAll();
+  },
 };
 </script>
 
