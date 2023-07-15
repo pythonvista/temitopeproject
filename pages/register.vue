@@ -74,14 +74,12 @@
       </div>
     </div>
     <section v-else class="bg-white dark:bg-gray-900">
-      <div
-        class=" flex items-center justify-center min-h-screen px-6 mx-auto"
-      >
+      <div class="flex items-center justify-center min-h-screen px-6 mx-auto">
         <form class="w-full max-w-md">
           <div class="flex justify-center mx-auto">
             <img
               class="w-auto h-7 sm:h-8"
-               src="@/assets/images/logo/fuoye-logo.png"
+              src="@/assets/images/logo/fuoye-logo.png"
               alt=""
             />
           </div>
@@ -141,7 +139,7 @@
 
             <input
               type="text"
-              v-model="dform.fullname"
+              v-model="fullName"
               class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Full Name"
             />
@@ -201,9 +199,9 @@
 
           <div class="mt-6">
             <q-btn
-              :disable="!phone"
               @click="SendOtp"
               id="mapps"
+              :disable="!Valid"
               :loading="loading"
               class="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
             >
@@ -227,6 +225,7 @@
 
 <script>
 import { RecaptchaVerifier } from 'firebase/auth';
+import { onSnapshot } from 'firebase/firestore';
 let appVerifier;
 let confirmationResult;
 let crud;
@@ -234,11 +233,11 @@ let authfunc;
 let nuxt;
 let store;
 export default {
- 
   data: () => ({
     phone: '',
     email: '',
     fullName: '',
+    allUsers: [],
     matricno: '',
     otpbox: false,
     otp: '',
@@ -247,20 +246,42 @@ export default {
     loading2: false,
   }),
   methods: {
-      async SendOtp() {
-      this.loading = true;
-      try {
-        confirmationResult = await authfunc.Phone(
-          '+' + this.phone,
-          appVerifier
+    async SendOtp() {
+      if (this.Valid) {
+        let temp1 = this.allUsers.filter((v) => v.uid == '+' + this.phone);
+        let temp2 = this.allUsers.filter((v) => v.email == '+' + this.email);
+        let temp3 = this.allUsers.filter(
+          (v) => v.matricno.toLowerCase() == '+' + this.matricno.toLowerCase()
         );
-        ShowSnack('otp sent', 'positive');
-        this.loading = false;
-        this.otpbox = true;
-      } catch (err) {
-        console.log(err);
-        this.loading = false;
-        ShowSnack('Error Sending Otp', 'negative');
+        console.log(temp1, temp2, temp3)
+        if (temp1.length > 0) {
+          ShowSnack('Phone Number is taken already', 'negative');
+          return;
+        }
+        if (temp2.length > 0) {
+          ShowSnack('Email is taken already', 'negative');
+          return;
+        }
+        if (temp3.length > 0) {
+          ShowSnack('Matric is taken already', 'negative');
+          return;
+        }
+        this.loading = true;
+        try {
+          confirmationResult = await authfunc.Phone(
+            '+' + this.phone,
+            appVerifier
+          );
+          ShowSnack('otp sent', 'positive');
+          this.loading = false;
+          this.otpbox = true;
+        } catch (err) {
+          console.log(err);
+          this.loading = false;
+          ShowSnack('Error Sending Otp', 'negative');
+        }
+      } else {
+        ShowSnack('Fields Required', 'negative');
       }
     },
     async VerifyOtp() {
@@ -280,7 +301,7 @@ export default {
         store.SetUserData(doc.data());
         this.loading2 = false;
         this.otpbox = false;
-        this.$router.push({ path: '/faceupload', query: {uid: this.phone} });
+        this.$router.push({ path: '/faceupload', query: { uid: this.phone } });
       } catch (err) {
         console.log(err);
         this.loading2 = false;
@@ -297,6 +318,23 @@ export default {
         authfunc.UserState()
       );
     },
+    GetAll() {
+      onSnapshot(crud.queryDoc('USERS'), (snapshot) => {
+        this.allUsers = [];
+        snapshot.forEach((doc) => {
+          this.allUsers.push(doc.data());
+        });
+      });
+    },
+  },
+  computed: {
+    Valid() {
+      if (this.phone && this.email && this.matricno && this.fullName) {
+        return true;
+      }
+
+      return false;
+    },
   },
   created() {
     nuxt = useNuxtApp();
@@ -305,7 +343,8 @@ export default {
     authfunc = nuxt.$authfunc;
   },
   mounted() {
-    this.INit()
+    this.INit();
+    this.GetAll();
   },
 };
 </script>
