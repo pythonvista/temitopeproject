@@ -30,6 +30,12 @@
         <p>Election Id: {{ election.id }}</p>
         <input
           type="text"
+          v-model="election.id"
+          class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+          placeholder="Election Id"
+        />
+        <input
+          type="text"
           v-model="election.title"
           class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Title"
@@ -60,6 +66,12 @@
       <div class="bg-white p-3 flex flex-col justify-center items-center gap-4">
         <p class="rexr-3xl font-bold">Add Pools</p>
         <p>Pools Id: {{ polls.id }}</p>
+        <input
+          type="text"
+          v-model="polls.id"
+          class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+          placeholder="Pooling Id"
+        />
         <q-select
           label="Select Election"
           :options="allElection.map((m) => m.id)"
@@ -92,6 +104,7 @@
       <div class="bg-white p-3 flex flex-col justify-center items-center gap-4">
         <p class="rexr-3xl font-bold">Add Contestant</p>
         <p>Contes Id: {{ contestant.id }}</p>
+
         <q-select
           label="Select Pools"
           :options="allPools.map((m) => m.id)"
@@ -122,33 +135,48 @@
       </div>
     </q-dialog>
 
-    <div class="grid w-full my-3 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <div class="border-2 border-solid border-red-500">
-        <p>All Elections</p>
-        <h1 v-for="(i, index) in allElection" :key="index">{{ i.title }}</h1>
+    <div class="w-full my-3 ">
+      <div class="p-6 bg-white">
+        <p class="text-center w-full text-2xl">All Elections</p>
+        <q-expansion-item
+          v-for="(i, index) in allElection"
+          :key="index"
+          expand-separator
+          :label="i.title"
+        >
+          <q-card>
+            <q-card-section>
+              <div v-for="(m, index) in allPools.filter((v)=> v.electionid == i.id)" :key="index">
+                <q-expansion-item
+                  expand-separator
+                  :label="m.title"
+                >
+                  <q-card>
+                    <q-card-section>
+                      <div  v-for="(n, index) in allContestant.filter((v)=> v.pollsid == m.id)"
+                          :key="index">
+                        {{ n.fullname }}
+                      </div>
+                    </q-card-section>
+                  </q-card>
+                </q-expansion-item>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
       </div>
 
-      <div class="border-2 border-solid border-red-500">
-        <p>All Polls</p>
-
-        <h1 v-for="(i, index) in allPools" :key="index">{{ i.title }}</h1>
-      </div>
-
-      <div class="border-2 border-solid border-red-500">
-        <p>All Contestant</p>
-        <h1 v-for="(i, index) in allContestant" :key="index">
-          {{ i.fullname }}
-        </h1>
-      </div>
+      
     </div>
     <div class="px-3 my-4" v-for="(i, index) in allPools" :key="index">
-      <p class="text-2xl font-bold w-full text-center">
-        {{ i.title }} Contestants
-      </p>
-       <utils-adminslide  :allVotes="allVotes"
-        :data="allContestant.filter((v) => v.pollsid == i.id)"></utils-adminslide>
-    </div>
-   
+        <p class="text-2xl font-bold w-full text-center">
+          {{ i.title }} Contestants
+        </p>
+        <utils-adminslide
+          :allVotes="allVotes"
+          :data="allContestant.filter((v) => v.pollsid == i.id)"
+        ></utils-adminslide>
+      </div>
   </div>
 </template>
 
